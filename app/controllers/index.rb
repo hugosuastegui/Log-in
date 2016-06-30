@@ -1,5 +1,15 @@
 enable :sessions
-
+before '/secret' do
+  if session[:name]
+    @message_name = session[:name]
+    erb :secret
+  else
+    erb :index
+  end
+end
+#en esta forma solo se utilizan 3 vistas, de otra forma se podria
+#implementar 5 vistas para cada caso: login,logout,registrer,invalid y valid registrer
+#esto se hace al crear mas vistas en el view
 get '/' do
 
     erb :index
@@ -26,9 +36,13 @@ post '/login' do
   else
 #obtener id y email para crear sesión
     session[:name] = user.name
-    @message_name = session[:name]
-    erb :secret
+    
+    redirect to '/secret'
   end
+end
+
+get '/secret' do
+  erb :secret
 end
 
 get '/logout' do
